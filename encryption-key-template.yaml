@@ -1,0 +1,51 @@
+Description: >
+    Deploys custom CMS which is used for variables encryption
+Resources:
+  #Encryption Key Creation (See Key Management Service KMS)
+  KeyForEnvVarEncryption:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: "Key for sensitive data encryption"
+      KeyPolicy:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: "Allow administration of the key"
+            Effect: "Allow"
+            Principal:
+              AWS: "arn:aws:iam::641917361782:role/CrossAccountAdmin"
+            Action:
+              - "kms:Create*"
+              - "kms:Encrypt"
+              - "kms:Describe*"
+              - "kms:Enable*"
+              - "kms:List*"
+              - "kms:Put*"
+              - "kms:Update*"
+              - "kms:Revoke*"
+              - "kms:Disable*"
+              - "kms:Get*"
+              - "kms:Delete*"
+              - "kms:ScheduleKeyDeletion"
+              - "kms:CancelKeyDeletion"
+            Resource: "*"
+          - Sid: "Allow use of the key"
+            Effect: "Allow"
+            Principal:
+              AWS: '*'
+            Action:
+              - "kms:Decrypt"
+            Resource: "*"
+  AliasForKeyForEnvVarEncryption:
+    Type: AWS::KMS::Alias
+    Properties:
+      AliasName: alias/EncryptionKeyForEnvVariables
+      TargetKeyId: !Ref KeyForEnvVarEncryption
+
+Outputs:
+    EncryptionKeyForEnvVariables:
+      Description: "Id of the key being used for en/decryption of the env variable"
+      Value: !Ref KeyForEnvVarEncryption
+
+    AliasForEncryptionKeyForEnvVariables:
+      Description: "Alias of the key being used for en/decryption of the env variable"
+      Value: !Ref AliasForKeyForEnvVarEncryption

@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+    SAM Application with different approaches for config management
+Globals:
+    Function:
+        Timeout: 3
+
+Resources:
+    EnvVarConfigFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            # Per default lambda encrypt/decrypt the values in env variables at runtime using default CMS, but
+            # it is possible to use custom key for those operations. When using custom keys, customer is billed for it.
+            # KmsKeyArn: !GetAtt KeyForEnvVarEncryption.Arn
+            CodeUri: env-var-config
+            Handler: app.lambdaHandler
+            Runtime: nodejs8.10
+            Environment:
+                Variables:
+                    MY_PARAM_USED_BY_ONE_FUNCTION: 'MY_PARAM_USED_BY_ONE_FUNCTION'
+            Events:
+                ReadConfigValues:
+                    Type: Api
+                    Properties:
+                        Path: /config-env
+                        Method: get
+    EncryptedEnvVarConfigFunction:
+            Type: AWS::Serverless::Function
+            Properties:
+                CodeUri: encrypted-env-var-config
+                Handler: app.lambdaHandler
+                Runtime: nodejs8.10
+                Environment:
+                    Variables:
+                        ENCRYPTED_AT_REST: 'NOT_SENSITIVE_VALUE'
+                        OTHER_SENSITIVE_VAR: 'AQICAHgOsiIFdEQn0OiMlGPHXb8++AsCf+oEvvFwQRZHMtSsCAEnQXoFC/Wly7DmIvPcw841AAAAczBxBgkqhkiG9w0BBwagZDBiAgEAMF0GCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMk94M7Ut7hRaQOf6vAgEQgDDaRGyUmWZFyYgxkUji2/qM1Wk69oxdWobArZBjCsiZM1qfxexJ5yFCLAulZVJXEBg='
+                Events:
+                  ReadConfigValues:
+                        Type: Api
+                        Properties:
+                            Path: /encrypted-config-env
+                            Method: get
+
+Outputs:
+    ApiUrl:
+      Description: "API Gateway endpoint URL for Prod stage for Read Configuration  function"
+      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/encrypted-config-env"
