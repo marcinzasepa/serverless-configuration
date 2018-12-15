@@ -1,0 +1,23 @@
+{
+  "name": "hello_world",
+  "version": "1.0.0",
+  "description": "hello world sample for NodeJS",
+  "main": "src/index.js",
+  "repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",
+  "author": "SAM CLI",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0"
+  },
+  "scripts": {
+    "test": "mocha tests/unit/",
+    "sam-build": "sam build",
+    "sam-package": "sam package --s3-bucket hg-test-deployments --s3-prefix hg-sandbox/$USER  --output-template-file template-generated.yaml --profile hg-test",
+    "sam-deploy": "aws cloudformation deploy --template-file /Users/machss/Documents/Development/samples/config-env-ver/template-generated.yaml --stack-name mzasepa-sanbox-config-env-var --profile hg-test --capabilities CAPABILITY_IAM",
+    "sam-package-and-deploy": "yarn sam-build && yarn sam-package && yarn sam-deploy"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.1.1"
+  }
+}
