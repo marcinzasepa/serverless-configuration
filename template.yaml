@@ -41,6 +41,21 @@ Resources:
                         Properties:
                             Path: /encrypted-config-env
                             Method: get
+    SSMBuildTimeConfigFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: ssm-build-time-config
+            Handler: app.lambdaHandler
+            Runtime: nodejs8.10
+            Environment:
+                Variables:
+                    MY_PARAM_FROM_SSM: !Sub '{{resolve:ssm:/serviceA/anyConfigValue:1}}'
+            Events:
+                ReadConfigValues:
+                    Type: Api
+                    Properties:
+                        Path: /ssm-build-time-config
+                        Method: get
 
 Outputs:
     ApiUrl:

@@ -62,6 +62,8 @@ Events:
 
 ## Packaging and deployment
 
+aws kms  encrypt --key-id alias/EncryptionKeyForEnvVariables --plaintext "SENSITIVE_DATA_STRING" --profile "hg-test"
+
 AWS Lambda NodeJS runtime requires a flat folder with all dependencies including the application. SAM will use `CodeUri` property to know where to look up for both application and dependencies:
 
 ```yaml

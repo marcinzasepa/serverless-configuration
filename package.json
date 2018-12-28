@@ -12,8 +12,8 @@
   "scripts": {
     "test": "mocha tests/unit/",
     "sam-build": "sam build",
-    "sam-package": "sam package --s3-bucket $DEPLOYMENT_BUCKET --s3-prefix hg-sandbox/$USER  --output-template-file template-generated.yaml --profile $AWS_PROFILE",
-    "sam-deploy": "aws cloudformation deploy --template-file template-generated.yaml --stack-name $USER-config-env-var --profile $AWS_PROFILE --capabilities CAPABILITY_IAM",
+    "sam-package": "sam package --s3-bucket $DEPLOYMENT_BUCKET --s3-prefix hg-sandbox/$USER  --output-template-file .aws-sam/build/template-generated.yaml --profile $AWS_PROFILE",
+    "sam-deploy": "aws cloudformation deploy --template-file .aws-sam/build/template-generated.yaml --stack-name $USER-config-env-var --profile $AWS_PROFILE --capabilities CAPABILITY_IAM",
     "sam-describe-stack": "aws cloudformation describe-stacks --stack-name $USER-config-env-var --query 'Stacks[].Outputs'",
     "sam-package-and-deploy": "yarn sam-build && yarn sam-package && yarn sam-deploy",
     "describe-stack-keys" : "aws cloudformation describe-stacks --stack-name $USER-customer-master-key-for-config --query 'Stacks[].Outputs' --profile $AWS_PROFILE",
