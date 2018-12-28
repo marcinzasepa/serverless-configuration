@@ -50,6 +50,8 @@ Resources:
             Environment:
                 Variables:
                     MY_PARAM_FROM_SSM: !Sub '{{resolve:ssm:/serviceA/anyConfigValue:1}}'
+                    # MY_PARAM_SECURE: !Sub '{{resolve:ssm-secure:/test/secureString:1}}' ssm-secure is not supported for Lambda therefore see alternative below:
+                    MY_PARAM_FROM_SECRET_MANAGER: !Sub '{{resolve:secretsmanager:secretValue}}'
             Events:
                 ReadConfigValues:
                     Type: Api
