@@ -4,7 +4,7 @@ Description: >
     SAM Application with different approaches for config management
 Globals:
     Function:
-        Timeout: 3
+        Timeout: 30
 
 Resources:
     EnvVarConfigFunction:
@@ -57,6 +57,33 @@ Resources:
                     Type: Api
                     Properties:
                         Path: /ssm-build-time-config
+                        Method: get
+    SSMRunTimeConfigCachedFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: ssm-run-time-config-cached
+            Handler: app.lambdaHandler
+            Runtime: nodejs8.10
+            Tracing: Active # Activate eX-Ray
+            Policies:
+                - AWSXrayWriteOnlyAccess
+                - Statement:
+                      - Effect: Allow
+                        Action:
+                            - ssm:GetParametersByPath
+                        Resource:
+                            - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/serviceA
+                - Statement:
+                      - Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource:
+                            - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/paramByName
+            Events:
+                ReadConfigValues:
+                    Type: Api
+                    Properties:
+                        Path: /ssm-build-time-config-cached
                         Method: get
 
 Outputs:
