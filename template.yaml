@@ -4,7 +4,7 @@ Description: >
     SAM Application with different approaches for config management
 Globals:
     Function:
-        Timeout: 30
+        Timeout: 300
 
 Resources:
     EnvVarConfigFunction:
@@ -58,13 +58,55 @@ Resources:
                     Properties:
                         Path: /ssm-build-time-config
                         Method: get
+    SSMRunTimeConfigFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: ssm-run-time-config
+            Handler: app.lambdaHandler
+            Runtime: nodejs8.10
+            Tracing: Active
+            Policies:
+                - AWSXrayWriteOnlyAccess
+                - Statement:
+                      - Effect: Allow
+                        Action:
+                            - ssm:GetParametersByPath
+                        Resource:
+                            - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/serviceA
+            Events:
+                ReadConfigValues:
+                    Type: Api
+                    Properties:
+                        Path: /ssm-run-time-config
+                        Method: get
+    SecretManagerRunTimeConfigFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            CodeUri: secretmanager-run-time-config
+            Handler: app.lambdaHandler
+            Runtime: nodejs8.10
+            Tracing: Active
+            Policies:
+                - AWSXrayWriteOnlyAccess
+                - Statement:
+                      - Effect: Allow
+                        Action:
+                            - secretsmanager:GetSecretValue
+                        Resource:
+                            - Fn::Sub: arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:secretValue-PqdCqJ
+            Events:
+                ReadConfigValues:
+                    Type: Api
+                    Properties:
+                        Path: /secretmanager-run-time-config
+                        Method: get
     SSMRunTimeConfigCachedFunction:
         Type: AWS::Serverless::Function
         Properties:
             CodeUri: ssm-run-time-config-cached
             Handler: app.lambdaHandler
             Runtime: nodejs8.10
-            Tracing: Active # Activate eX-Ray
+            Tracing: Active
             Policies:
                 - AWSXrayWriteOnlyAccess
                 - Statement:
@@ -83,7 +125,7 @@ Resources:
                 ReadConfigValues:
                     Type: Api
                     Properties:
-                        Path: /ssm-build-time-config-cached
+                        Path: /ssm-run-time-config-cached
                         Method: get
 
 Outputs:

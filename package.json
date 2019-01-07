@@ -16,7 +16,7 @@
     "sam-deploy": "aws cloudformation deploy --template-file .aws-sam/build/template-generated.yaml --stack-name $USER-config-env-var --profile $AWS_PROFILE --capabilities CAPABILITY_IAM",
     "sam-describe-stack": "aws cloudformation describe-stacks --stack-name $USER-config-env-var --query 'Stacks[].Outputs'",
     "sam-package-and-deploy": "yarn sam-build && yarn sam-package && yarn sam-deploy",
-    "describe-stack-keys" : "aws cloudformation describe-stacks --stack-name $USER-customer-master-key-for-config --query 'Stacks[].Outputs' --profile $AWS_PROFILE",
+    "describe-stack-keys": "aws cloudformation describe-stacks --stack-name $USER-customer-master-key-for-config --query 'Stacks[].Outputs' --profile $AWS_PROFILE",
     "deploy-encryption-key": "aws cloudformation deploy --template encryption-key-template.yaml --stack-name $USER-customer-master-key-for-config --profile $AWS_PROFILE && yarn describe-stack-keys"
   },
   "devDependencies": {
