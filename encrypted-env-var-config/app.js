@@ -1,13 +1,17 @@
-const AWS = require('aws-sdk');
-let response;
+const AWSXRay = require('aws-xray-sdk-core');
+const AWS = AWSXRay.captureAWS(require('aws-sdk'));
 
 const kms = new AWS.KMS();
 
-exports.lambdaHandler = async (event, context) => {
+let decryptedValue;
+
+exports.lambdaHandler = async () => {
     try {
-        let sensitiveValueBlob = Buffer.from(process.env.OTHER_SENSITIVE_VAR, 'base64');
-        const decryptedValue = await kms.decrypt({CiphertextBlob: sensitiveValueBlob}).promise();
-        response = {
+        if(!decryptedValue) {
+            const sensitiveValueBlob = Buffer.from(process.env.OTHER_SENSITIVE_VAR, 'base64');
+            decryptedValue = await kms.decrypt({CiphertextBlob: sensitiveValueBlob}).promise();
+        }
+        return  {
             'statusCode': 200,
             'body': JSON.stringify({
                 message: `Env variable: ${process.env.ENCRYPTED_AT_REST}, sensitive decrypted ${decryptedValue.Plaintext}`
@@ -17,6 +21,4 @@ exports.lambdaHandler = async (event, context) => {
         console.log(err);
         return err;
     }
-
-    return response
 };
