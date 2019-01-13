@@ -73,6 +73,19 @@ Resources:
                             - ssm:GetParametersByPath
                         Resource:
                             - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/serviceA
+                #Reading from Secret Manager via SSM requires both ssm and secret manager permissions
+                - Statement:
+                      - Effect: Allow
+                        Action:
+                            - ssm:GetParameter
+                        Resource:
+                            - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aws/reference/secretsmanager/secretValue
+                - Statement:
+                      - Effect: Allow
+                        Action:
+                            - secretsmanager:GetSecretValue
+                        Resource:
+                            - Fn::Sub: arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:secretValue-*
             Events:
                 ReadConfigValues:
                     Type: Api
@@ -93,7 +106,7 @@ Resources:
                         Action:
                             - secretsmanager:GetSecretValue
                         Resource:
-                            - Fn::Sub: arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:secretValue-PqdCqJ
+                            - Fn::Sub: arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:secretValue-*
             Events:
                 ReadConfigValues:
                     Type: Api
