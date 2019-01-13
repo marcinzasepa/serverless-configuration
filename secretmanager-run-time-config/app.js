@@ -7,21 +7,21 @@ const request = {
     SecretId: 'secretValue'
 };
 
-let response;
+let secretValue;
 exports.lambdaHandler = async (event, context) => {
     try {
 
-        const result = await secretsmanager.getSecretValue(request).promise();
-        response = {
+        if (!secretValue) {
+            await secretsmanager.getSecretValue(request).promise();
+        }
+        return {
             'statusCode': 200,
             'body': JSON.stringify({
-                message: `Here are the values from secret manager: ${result.SecretString}`
+                message: `Here are the values from secret manager: ${secretValue.SecretString}`
             })
         };
     } catch (err) {
         console.log(err);
         return err;
     }
-
-    return response
 };
