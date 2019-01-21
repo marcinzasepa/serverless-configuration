@@ -12,7 +12,7 @@ exports.lambdaHandler = async (event, context) => {
     try {
 
         if (!secretValue) {
-            await secretsmanager.getSecretValue(request).promise();
+          secretValue = await secretsmanager.getSecretValue(request).promise();
         }
         return {
             'statusCode': 200,
