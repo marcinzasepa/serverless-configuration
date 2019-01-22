@@ -15,7 +15,7 @@ This is a small application showing different approaches for configuration manag
 └── encryption-key-template.yaml <-- SAM template which deploys custom CMK used for encryption and decryption of sensitive data  
 ```
 
-#Description 
+## Description 
 
 Project consist of many lambdas presenting different approaches for configuration management. More information can be found on the related blog entry on the medium.com.
 Apart from the lambdas and template.yaml there is an additional Cloudformation template encryption-key-template.yaml which deploys custom CMK used for encryption and decryption of sensitive data.
