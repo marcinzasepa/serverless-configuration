@@ -11,9 +11,5 @@
     "axios": "^0.18.0",
     "lodash": "^4.17.11",
     "middy": "^0.20.0"
-  },
-  "devDependencies": {
-    "chai": "^4.1.2",
-    "mocha": "^5.1.1"
   }
 }
