@@ -16,6 +16,7 @@ This is a small application showing different approaches for configuration manag
 ```
 
 #Description 
+
 Project consist of many lambdas presenting different approaches for configuration management. More information can be found on the related blog entry on the medium.com.
 Apart from the lambdas and template.yaml there is an additional Cloudformation template encryption-key-template.yaml which deploys custom CMK used for encryption and decryption of sensitive data.
 
@@ -26,6 +27,7 @@ Apart from the lambdas and template.yaml there is an additional Cloudformation t
 * [Docker installed](https://www.docker.com/community-edition)
 
 ## Environment Variables 
+
 For the deployment of the cloudformation stacks, yarn with predefined scripts can be used. For scripts to work it is necessary to have following environment variables defined:
 
 AWS_PROFILE - Which is the name of the profile which should be used for deployment as configured in the ~/.aws/credentials file
