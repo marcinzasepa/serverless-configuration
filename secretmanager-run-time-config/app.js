@@ -1,16 +1,14 @@
 const AWSXRay = require('aws-xray-sdk-core');
 const AWS = AWSXRay.captureAWS(require('aws-sdk'));
 
-var secretsmanager = new AWS.SecretsManager();
-
+const secretsmanager = new AWS.SecretsManager();
 const request = {
     SecretId: 'secretValue'
 };
 
 let secretValue;
-exports.lambdaHandler = async (event, context) => {
+exports.lambdaHandler = async () => {
     try {
-
         if (!secretValue) {
           secretValue = await secretsmanager.getSecretValue(request).promise();
         }

@@ -2,9 +2,7 @@ const AWSXRay = require('aws-xray-sdk-core');
 const AWS = AWSXRay.captureAWS(require('aws-sdk'));
 
 const ssm = new AWS.SSM();
-
-let response;
-exports.lambdaHandler = async (event, context) => {
+exports.lambdaHandler = async () => {
     try {
 
         const result = await ssm.getParametersByPath({
@@ -12,11 +10,13 @@ exports.lambdaHandler = async (event, context) => {
             Recursive: true,
             WithDecryption: false,
         }).promise();
+
         const parameterFromSecretManager = await ssm.getParameter({
             Name: '/aws/reference/secretsmanager/secretValue',
             WithDecryption: true
         }).promise();
-        response = {
+
+        return {
             'statusCode': 200,
             'body': JSON.stringify({
                 message: `Here are the values from ssm: ${JSON.stringify(result.Parameters)} 
@@ -27,6 +27,4 @@ exports.lambdaHandler = async (event, context) => {
         console.log(err);
         return err;
     }
-
-    return response
 };

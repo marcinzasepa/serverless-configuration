@@ -1,16 +1,15 @@
 {
-  "name": "hello_world",
+  "name": "aws_lambda_config",
   "version": "1.0.0",
-  "description": "hello world sample for NodeJS",
+  "description": "Different approaches to configuration management on AWS for lambda",
   "main": "src/index.js",
-  "repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",
+  "repository": "https://github.com/marcinzasepa/serverless-configuration",
   "author": "SAM CLI",
   "license": "MIT",
   "dependencies": {
 
   },
   "scripts": {
-    "test": "mocha tests/unit/",
     "sam-build": "sam build",
     "sam-package": "sam package --s3-bucket $DEPLOYMENT_BUCKET --s3-prefix hg-sandbox/$USER  --output-template-file .aws-sam/build/template-generated.yaml --profile $AWS_PROFILE",
     "sam-deploy": "aws cloudformation deploy --template-file .aws-sam/build/template-generated.yaml --stack-name $USER-config-env-var --profile $AWS_PROFILE --capabilities CAPABILITY_IAM",

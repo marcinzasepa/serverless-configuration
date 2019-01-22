@@ -1,6 +1,6 @@
 let response;
 
-exports.lambdaHandler = async (event, context) => {
+exports.lambdaHandler = async () => {
     try {
         response = {
             'statusCode': 200,

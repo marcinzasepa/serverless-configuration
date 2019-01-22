@@ -1,17 +1,16 @@
 {
-  "name": "hello_world",
+  "name": "ssm-build-time-config",
   "version": "1.0.0",
-  "description": "hello world sample for NodeJS",
-  "main": "src/index.js",
-  "repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",
-  "author": "SAM CLI",
+  "description": "lambda using cloudformation SSM parameter resolution for its configuration",
+  "main": "app.js",
+  "repository": "https://github.com/marcinzasepa/serverless-configuration/tree/master/ssm-build-time-config",
+  "author": "Marcin Zasepa",
   "license": "MIT",
+  "scripts": {
+    "sam-build": "sam build"
+  },
   "dependencies": {
     "axios": "^0.18.0"
-  },
-  "scripts": {
-    "test": "mocha tests/unit/",
-    "sam-build": "sam build"
   },
   "devDependencies": {
     "chai": "^4.1.2",

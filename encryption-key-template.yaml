@@ -40,6 +40,27 @@ Resources:
     Properties:
       AliasName: alias/EncryptionKeyForEnvVariables
       TargetKeyId: !Ref KeyForEnvVarEncryption
+  AnyConfigValue:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      Description: String
+      Name: '/serviceA/anyConfigValue'
+      Type: String
+      Value: 'ANY_CONFIG_VALUE'
+  AnyOtherConfigValue:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      Description: String
+      Name: '/serviceA/anyOtherConfigValue'
+      Type: String
+      Value: 'ANY_OTHER_CONFIG_VALUE'
+  ConfigValueByName:
+      Type: "AWS::SSM::Parameter"
+      Properties:
+        Description: String
+        Name: '/paramByName'
+        Type: String
+        Value: 'ANY_CONFIG_VALUE_REFERENCED_BY_NAME'
 
 Outputs:
     EncryptionKeyForEnvVariables:

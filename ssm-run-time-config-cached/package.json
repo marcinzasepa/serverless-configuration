@@ -1,22 +1,23 @@
 {
-  "name": "hello_world",
+  "name": "ssm-run-time-config-cached",
   "version": "1.0.0",
-  "description": "hello world sample for NodeJS",
-  "main": "src/index.js",
-  "repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",
-  "author": "SAM CLI",
+  "description": "lambda using middleware to cache the parameters fecthed at runtime from SSM store",
+  "main": "app.js",
+  "repository": "https://github.com/marcinzasepa/serverless-configuration/tree/master/ssm-run-time-config-cached",
+  "author": "Marcin Zasepa",
   "license": "MIT",
-  "dependencies": {
-    "axios": "^0.18.0",
-    "lodash": "^4.17.11",
-    "middy": "^0.20.0"
-  },
   "scripts": {
     "test": "mocha tests/unit/",
     "sam-build": "sam build",
     "sam-package": "sam package --s3-bucket hg-test-deployments --s3-prefix hg-sandbox/$USER  --output-template-file template-generated.yaml --profile hg-test",
     "sam-deploy": "aws cloudformation deploy --template-file /Users/machss/Documents/Development/samples/config-env-ver/template-generated.yaml --stack-name mzasepa-sanbox-config-env-var --profile hg-test --capabilities CAPABILITY_IAM",
     "sam-package-and-deploy": "yarn sam-build && yarn sam-package && yarn sam-deploy"
+  },
+  "dependencies": {
+    "aws-xray-sdk-core": "^2.1.0",
+    "axios": "^0.18.0",
+    "lodash": "^4.17.11",
+    "middy": "^0.20.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",

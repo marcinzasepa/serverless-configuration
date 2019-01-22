@@ -34,7 +34,7 @@ Resources:
                 Environment:
                     Variables:
                         ENCRYPTED_AT_REST: 'NOT_SENSITIVE_VALUE'
-                        OTHER_SENSITIVE_VAR: 'AQICAHgOsiIFdEQn0OiMlGPHXb8++AsCf+oEvvFwQRZHMtSsCAEnQXoFC/Wly7DmIvPcw841AAAAczBxBgkqhkiG9w0BBwagZDBiAgEAMF0GCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMk94M7Ut7hRaQOf6vAgEQgDDaRGyUmWZFyYgxkUji2/qM1Wk69oxdWobArZBjCsiZM1qfxexJ5yFCLAulZVJXEBg='
+                        OTHER_SENSITIVE_VAR: 'AQICAHjnCFBm6B4OeyR9f+99/+qOBKZCWI4BEqPy1Kn6FjSXRwH9Lm088Hy7kg/XG3IQapW3AAAAczBxBgkqhkiG9w0BBwagZDBiAgEAMF0GCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMOjEP+6wzjboDeIBxAgEQgDATTcpJLz06RBxzPQods8b8akUNeVUKfrj40vmPuQwMIGiYfKrbn2w/99H83qeLLyA='
                 Events:
                   ReadConfigValues:
                         Type: Api
@@ -131,7 +131,7 @@ Resources:
                 - Statement:
                       - Effect: Allow
                         Action:
-                            - ssm:GetParameter
+                            - ssm:GetParameters
                         Resource:
                             - Fn::Sub: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/paramByName
             Events:

@@ -1,8 +1,6 @@
-let response;
-
-exports.lambdaHandler = async (event, context) => {
+exports.lambdaHandler = async () => {
     try {
-        response = {
+        return {
             'statusCode': 200,
             'body': JSON.stringify({
                 message: `Here is the value from env variable delivered from ssm: ${process.env.MY_PARAM_FROM_SSM} 
@@ -13,6 +11,4 @@ exports.lambdaHandler = async (event, context) => {
         console.log(err);
         return err;
     }
-
-    return response
 };

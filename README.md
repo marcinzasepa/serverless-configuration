@@ -1,18 +1,23 @@
-# sam-app
+# Configuration management for serverless AWS applications
 
-This is a sample template for sam-app - Below is a brief explanation of what we have generated for you:
+This is a small application showing different approaches for configuration management on AWS when using lambdas. Below short description of the project layout:  
 
 ```bash
 .
 ├── README.md                   <-- This instructions file
-├── hello-world                 <-- Source code for a lambda function
-│   ├── app.js                  <-- Lambda function code
-│   ├── package.json            <-- NodeJS dependencies
-│   └── tests                   <-- Unit tests
-│       └── unit
-│           └── test_handler.js
-└── template.yaml               <-- SAM template
+├── env-var-config              <-- Source code for lambda using environment variables for configuration
+├── encrypted-env-var-config    <-- Source code for lambda using environment variables for configuration including sensitive data encrypted with KMS
+├── ssm-build-time-config       <-- Source code for lambda using cloudformation SSM parameter resolution for its configuration
+├── ssm-run-time-config         <-- Source code for lambda reading config params at runtime from SSM store
+├── secretmanager-run-time-config<-- Source code for lambda using Secrets Manager to read the paramteres at runtime
+├── ssm-run-time-config-cached  <-- Source code for lambda using middleware to cache the parameters fecthed at runtime from SSM store
+└── template.yaml               <-- SAM template deploying all the lambdas described above
+└── encryption-key-template.yaml <-- SAM template which deploys custom CMK used for encryption and decryption of sensitive data  
 ```
+
+#Description 
+Project consist of many lambdas presenting different approaches for configuration management. More information can be found on the related blog entry on the medium.com.
+Apart from the lambdas and template.yaml there is an additional Cloudformation template encryption-key-template.yaml which deploys custom CMK used for encryption and decryption of sensitive data.
 
 ## Requirements
 
@@ -20,125 +25,26 @@ This is a sample template for sam-app - Below is a brief explanation of what we 
 * [NodeJS 8.10+ installed](https://nodejs.org/en/download/)
 * [Docker installed](https://www.docker.com/community-edition)
 
-## Setup process
+## Environment Variables 
+For the deployment of the cloudformation stacks, yarn with predefined scripts can be used. For scripts to work it is necessary to have following environment variables defined:
 
-### Building the project
+AWS_PROFILE - Which is the name of the profile which should be used for deployment as configured in the ~/.aws/credentials file
 
-[AWS Lambda requires a flat folder](https://docs.aws.amazon.com/lambda/latest/dg/nodejs-create-deployment-pkg.html) with the application as well as its dependencies in a node_modules folder. When you make changes to your source code or dependency manifest,
-run the following command to build your project local testing and deployment:
+DEPLOYMENT_BUCKET - Name of the S3 bucket which should be used for deployment
+
+## Deployment
  
-```bash
-sam build
+In order to get all lambdas working, it is necessary to deploy encryption-key-template.yaml. 
+Following command has to be issued to deploy custom CMK and alias for it.
 ```
-
-If your dependencies contain native modules that need to be compiled specifically for the operating system running on AWS Lambda, use this command to build inside a Lambda-like Docker container instead:
-```bash
-sam build --use-container
+export AWS_PROFILE=<PROFILE_NAME> yarn deploy-encryption-key
 ```
- 
-By default, this command writes built artifacts to `.aws-sam/build` folder.
-
-### Local development
-
-**Invoking function locally through local API Gateway**
-
-```bash
-sam local start-api
+Once this step is finished  custom CMK, alias for it and some SSM parameters are deployed.
+In order for encrypted-env-var-config to work, it is necessary to encrypt your sensitive data with the command:
 ```
-
-If the previous command ran successfully you should now be able to hit the following local endpoint to invoke your function `http://localhost:3000/hello`
-
-**SAM CLI** is used to emulate both Lambda and API Gateway locally and uses our `template.yaml` to understand how to bootstrap this environment (runtime, where the source code is, etc.) - The following excerpt is what the CLI will read in order to initialize an API and its routes:
-
-```yaml
-...
-Events:
-    HelloWorld:
-        Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-        Properties:
-            Path: /hello
-            Method: get
+aws kms encrypt --key-id alias/EncryptionKeyForEnvVariables --plaintext "SENSITIVE_DATA_STRING" --profile <AWS_PROFILE_NAME>
 ```
-
-## Packaging and deployment
-
-aws kms  encrypt --key-id alias/EncryptionKeyForEnvVariables --plaintext "SENSITIVE_DATA_STRING" --profile "hg-test"
-
-AWS Lambda NodeJS runtime requires a flat folder with all dependencies including the application. SAM will use `CodeUri` property to know where to look up for both application and dependencies:
-
-```yaml
-...
-    FirstFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            CodeUri: hello-world/
-            ...
+In the second step you can deploy all the lambdas with:
 ```
-
-Firstly, we need a `S3 bucket` where we can upload our Lambda functions packaged as ZIP before we deploy anything - If you don't have a S3 bucket to store code artifacts then this is a good time to create one:
-
-```bash
-aws s3 mb s3://BUCKET_NAME
+export DEPLOYMENT_BUCKET=<BUCKET_NAME>;AWS_PROFILE=<PROFILE_NAME> yarn sam-package-and-deploy
 ```
-
-Next, run the following command to package our Lambda function to S3:
-
-```bash
-sam package \
-    --template-file template.yaml \
-    --output-template-file packaged.yaml \
-    --s3-bucket REPLACE_THIS_WITH_YOUR_S3_BUCKET_NAME
-```
-
-Next, the following command will create a Cloudformation Stack and deploy your SAM resources.
-
-```bash
-sam deploy \
-    --template-file packaged.yaml \
-    --stack-name sam-app \
-    --capabilities CAPABILITY_IAM
-```
-
-> **See [Serverless Application Model (SAM) HOWTO Guide](https://github.com/awslabs/serverless-application-model/blob/master/HOWTO.md) for more details in how to get started.**
-
-After deployment is complete you can run the following command to retrieve the API Gateway Endpoint URL:
-
-```bash
-aws cloudformation describe-stacks \
-    --stack-name sam-app \
-    --query 'Stacks[].Outputs'
-``` 
-
-## Testing
-
-We use `mocha` for testing our code and it is already added in `package.json` under `scripts`, so that we can simply run the following command to run our tests:
-
-```bash
-cd hello-world
-npm install
-npm run test
-```
-
-# Appendix
-
-## AWS CLI commands
-
-AWS CLI commands to package, deploy and describe outputs defined within the cloudformation stack:
-
-```bash
-DEPLOYMENT_BUCKET=<YOUR_DEPLOYMENT_BUCKET> AWS_PROFILE=<YOUR_PROFIE_FROM_CREDENTIAL_FILE> yarn sam-package-and-deploy
-```
-
-**NOTE**: To package and deplo.
-
-## Bringing to the next level
-
-Here are a few ideas that you can use to get more acquainted as to how this overall process works:
-
-* Create an additional API resource (e.g. /hello/{proxy+}) and return the name requested through this new path
-* Update unit test to capture that
-* Package & Deploy
-
-Next, you can use the following resources to know more about beyond hello world samples and how others structure their Serverless applications:
-
-* [AWS Serverless Application Repository](https://aws.amazon.com/serverless/serverlessrepo/)
