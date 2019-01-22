@@ -6,9 +6,6 @@
   "repository": "https://github.com/marcinzasepa/serverless-configuration/tree/master/ssm-build-time-config",
   "author": "Marcin Zasepa",
   "license": "MIT",
-  "scripts": {
-    "sam-build": "sam build"
-  },
   "dependencies": {
     "axios": "^0.18.0"
   },

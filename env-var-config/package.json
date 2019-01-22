@@ -6,13 +6,6 @@
   "repository": "https://github.com/marcinzasepa/serverless-configuration/tree/master/env-var-config",
   "author": "Marcin Zasepa",
   "license": "MIT",
-  "scripts": {
-    "test": "mocha tests/unit/",
-    "sam-build": "sam build",
-    "sam-package": "sam package --s3-bucket hg-test-deployments --s3-prefix hg-sandbox/$USER  --output-template-file template-generated.yaml --profile hg-test",
-    "sam-deploy": "aws cloudformation deploy --template-file /Users/machss/Documents/Development/samples/config-env-ver/template-generated.yaml --stack-name mzasepa-sanbox-config-env-var --profile hg-test --capabilities CAPABILITY_IAM",
-    "sam-package-and-deploy": "yarn sam-build && yarn sam-package && yarn sam-deploy"
-  },
   "dependencies": {
     "axios": "^0.18.0"
   },

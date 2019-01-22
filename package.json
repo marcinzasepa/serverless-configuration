@@ -2,13 +2,9 @@
   "name": "aws_lambda_config",
   "version": "1.0.0",
   "description": "Different approaches to configuration management on AWS for lambda",
-  "main": "src/index.js",
   "repository": "https://github.com/marcinzasepa/serverless-configuration",
-  "author": "SAM CLI",
+  "author": "Marcin Zasepa",
   "license": "MIT",
-  "dependencies": {
-
-  },
   "scripts": {
     "sam-build": "sam build",
     "sam-package": "sam package --s3-bucket $DEPLOYMENT_BUCKET --s3-prefix hg-sandbox/$USER  --output-template-file .aws-sam/build/template-generated.yaml --profile $AWS_PROFILE",
@@ -17,9 +13,5 @@
     "sam-package-and-deploy": "yarn sam-build && yarn sam-package && yarn sam-deploy",
     "describe-stack-keys": "aws cloudformation describe-stacks --stack-name $USER-customer-master-key-for-config --query 'Stacks[].Outputs' --profile $AWS_PROFILE",
     "deploy-encryption-key": "aws cloudformation deploy --template encryption-key-template.yaml --stack-name $USER-customer-master-key-for-config --profile $AWS_PROFILE && yarn describe-stack-keys"
-  },
-  "devDependencies": {
-    "chai": "^4.1.2",
-    "mocha": "^5.1.1"
   }
 }
