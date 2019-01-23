@@ -12,7 +12,7 @@ Resources:
           - Sid: "Allow administration of the key"
             Effect: "Allow"
             Principal:
-              AWS: "arn:aws:iam::641917361782:role/CrossAccountAdmin"
+              AWS: "arn:aws:iam::<Account Number>:role/<Role>"
             Action:
               - "kms:Create*"
               - "kms:Encrypt"
